@@ -1,16 +1,14 @@
 from faker import Faker
-from faker.generator import Generator
-import faker.providers.address.en_US
-import faker.providers.lorem.en_US
-import faker.providers.company
 import faker.providers.phone_number.en_US
 import random
+import unittest
+
+fake = Faker()
 
 
 class Provider(faker.providers.BaseProvider):
     ### Phone Numbers (could move to separate class)
     """Built around the North American Numbering Plan"""
-    fake = Faker()
 
     def phone_areacode(self):
         """Generates Area Codes from the of the North American Numbering Plan
@@ -33,3 +31,13 @@ class Provider(faker.providers.BaseProvider):
 
     def phone_lastfour(self):
         return fake.numerify(text="####")
+
+    def full_phone(self):
+        return ("{0}-{1}-{2}").format(
+            self.phone_areacode(), self.phone_exchange(), self.phone_lastfour()
+        )
+
+
+if __name__ == "__main__":
+    prov1 = Provider(faker.Generator())
+    print(prov1.full_phone())
