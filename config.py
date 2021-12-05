@@ -1,10 +1,11 @@
-from faker import Faker
-import faker.providers.phone_number.en_US
+import faker
+import faker.providers.phone_number as phoneLib
 import random
 import unittest
 
-fake = Faker()
-
+from faker.proxy import Faker
+fake = faker.Faker()
+phoneFake = phoneLib.Provider(faker.Generator())
 
 class Provider(faker.providers.BaseProvider):
     ### Phone Numbers (could move to separate class)
@@ -32,12 +33,20 @@ class Provider(faker.providers.BaseProvider):
     def phone_lastfour(self):
         return fake.numerify(text="####")
 
-    def full_phone(self):
-        return ("{0}-{1}-{2}").format(
-            self.phone_areacode(), self.phone_exchange(), self.phone_lastfour()
-        )
+    def full_phone(self, isRandomFormat) -> str:
+        #todo: #1 https://realpython.com/python-string-formatting/
+        if(isRandomFormat is None):
+            isRandomFormat = False
+        phoneString = ''
+        if(isRandomFormat):
+            concatPhone = self.phone_areacode+self.phone_exchange+self.phone_lastfour
+            phoneString = fake.random_choices(phoneLib.Provider.formats).format_map()
+        else: phoneString = ("{0}-{1}-{2}").format(
+            self.phone_areacode(), self.phone_exchange(), self.phone_lastfour())
+        return phoneString
 
 
 if __name__ == "__main__":
     prov1 = Provider(faker.Generator())
-    print(prov1.full_phone())
+    print(prov1.full_phone(False))
+    print(prov1.full_phone(True))
