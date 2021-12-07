@@ -3,14 +3,14 @@ from faker.generator import Generator
 from config import Provider
 
 
-class HigheredProviderTestCase(unittest.TestCase):
+class PhoneNumberProviderTestCase(unittest.TestCase):
     """Provider test case."""
 
     def setUp(self):
         self.provider = Provider(Generator())
 
     def test_lists_in_order(self):
-        """Test interal values are in order."""
+        """Test internal values are in order."""
         for attr_name, attr in self.__dict__.items():
             with self.subTest(attr_name=attr_name):
                 if isinstance(attr, list):
